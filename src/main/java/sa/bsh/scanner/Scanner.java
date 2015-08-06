@@ -17,6 +17,11 @@ public class Scanner {
     private int columnNumber;
     private boolean seenEOF;
 
+    /**
+     * Create a new scanner from a given reader object.
+     * @param reader The source reader object.
+     * @throws IOException
+     */
     public Scanner(Reader reader) throws IOException {
         this.reader = reader;
         this.lineNumber = 1;
@@ -27,10 +32,20 @@ public class Scanner {
         this.ch = reader.read();
     }
 
+    /**
+     * Create a new scanner from a string containing the source. A string reader will be created to read the source.
+     * @param source The source code.
+     * @throws IOException
+     */
     public Scanner(String source) throws IOException {
         this(new StringReader(source));
     }
 
+    /**
+     * Scan the source and return the next token.
+     * @return The next token.
+     * @throws IOException
+     */
     public Token scan() throws IOException {
         do {
             if (ch == -1) {
@@ -67,6 +82,7 @@ public class Scanner {
                 if (prev == '\r' && ch == '\n') {
                     next();
                 }
+                // Increment the line number and reset the column.
                 lineNumber++;
                 columnNumber = 1;
                 return new Token(Token.Type.NEWLINE, position);
@@ -85,11 +101,14 @@ public class Scanner {
     }
 
 
+    // Put the next character in the input in ch
     private void next() throws IOException {
         ch = reader.read();
         if (ch != -1)
             columnNumber++;
         else {
+            // Increment the column number only on the fist time EOF is met. This allows us to return EOF
+            // token every time scan() is called when EOF is already reached.
             if (!seenEOF) {
                 columnNumber++;
                 seenEOF = true;
@@ -97,6 +116,7 @@ public class Scanner {
         }
     }
 
+    // Mark the current potion in the source input.
     private Position markPosition() {
         return new Position(lineNumber, columnNumber);
     }
