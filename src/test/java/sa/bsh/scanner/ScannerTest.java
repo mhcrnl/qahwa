@@ -68,6 +68,25 @@ public class ScannerTest {
     }
 
     @Test
+    public void testReservedWords() throws Exception {
+        Scanner scanner = new Scanner("elseif else true false null");
+
+        Token tok1 = scanner.scan();
+        Token tok2 = scanner.scan();
+        Token tok3 = scanner.scan();
+        Token tok4 = scanner.scan();
+        Token tok5 = scanner.scan();
+        Token tok6 = scanner.scan();
+
+        assertEquals(new Token(Token.Type.ELSEIF, 1, 1), tok1);
+        assertEquals(new Token(Token.Type.ELSE, 1, 8), tok2);
+        assertEquals(new Token(Token.Type.TRUE, 1, 13), tok3);
+        assertEquals(new Token(Token.Type.FALSE, 1, 18), tok4);
+        assertEquals(new Token(Token.Type.NULL, 1, 24), tok5);
+        assertEquals(new Token(Token.Type.EOF, 1, 28), tok6);
+    }
+
+    @Test
     public void testNewlineCase1() throws Exception {
         Scanner scanner = new Scanner("\n \r\n  \n   \n");
 

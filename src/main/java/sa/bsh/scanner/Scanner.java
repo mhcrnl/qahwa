@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Scanner {
     private final Reader reader;
     // Keep this list of reserved word sorted in ascending order to look them up using binary search.
-    private final String[] reserved = {"elseif", "end", "if", "var", "while"};
+    private final String[] reserved = {"else", "elseif", "end", "false", "if", "null", "true", "var", "while"};
     private int ch;
     private int lineNumber;
     private int columnNumber;

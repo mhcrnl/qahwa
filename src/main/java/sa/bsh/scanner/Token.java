@@ -29,13 +29,14 @@ public class Token {
         // Identifier
         IDENTIFIER,
         // Literals
-        STRING, CHAR, INTEGER, FLOAT, DOUBLE, TRUE("true"), FALSE("false"), NULL("null"),
+        STRING, CHAR, INTEGER, FLOAT, DOUBLE,
         // Operators
         ADD("+"), SUB("-"), MUL("*"), DIV("/"), IADD("+="), ISUB("-="), IMUL("*="), IDIV("/="), ASS("="), EQL("=="),
         NEQ("!="), LT("<"), LTE("<="), GT(">"), GTE(">="), BNOT("~"), BAND("&"), BOR("|"), LAND("and"), LOR("or"),
         LNOT("not"),
         // Reserved words
-        VAR("var"), IF("if"), ELSEIF("elseif"), WHILE("while"), END("end"),
+        VAR("var"), IF("if"), ELSEIF("elseif"), ELSE("else"), WHILE("while"), TRUE("true"), FALSE("false"),
+        NULL("null"), END("end"),
         // Illegal
         ILLEGAL;
 
