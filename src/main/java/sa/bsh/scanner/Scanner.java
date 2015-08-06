@@ -98,12 +98,11 @@ public class Scanner {
          */
         // Construct number attribute.
         StringBuilder builder = new StringBuilder();
-        builder.append((char) ch);
-        int prev = ch;
-        next();
 
+        if (ch == '0') {
+            builder.append((char) ch);
+            next();
 
-        if (prev == '0') {
             // Hexadecimal
             if (ch == 'x' || ch == 'X') {
                 builder.append((char) ch);
@@ -117,6 +116,14 @@ public class Scanner {
                     builder.append((char) ch);
                     next();
                 } while (isHexDigit(ch));
+
+                if (ch == 'l' || ch == 'L') {
+                    builder.append((char) ch);
+                    next();
+                    return new Token(Token.Type.LONG, position, builder.toString());
+                }
+
+                return new Token(Token.Type.INTEGER, position, builder.toString());
             }
             // Binary
             else if (ch == 'b' || ch == 'B') {
@@ -131,27 +138,15 @@ public class Scanner {
                     builder.append((char) ch);
                     next();
                 } while (ch == '0' || ch == '1');
-            }
 
-            // Decimal
-            else {
-                while (Character.isDigit(ch)) {
+                if (ch == 'l' || ch == 'L') {
                     builder.append((char) ch);
                     next();
+                    return new Token(Token.Type.LONG, position, builder.toString());
                 }
-            }
 
-            if (ch == 'l' || ch == 'L') {
-                builder.append((char) ch);
-                next();
-                return new Token(Token.Type.LONG, position, builder.toString());
+                return new Token(Token.Type.INTEGER, position, builder.toString());
             }
-
-            else if (ch == '.') {
-                assert false;
-            }
-
-            return new Token(Token.Type.INTEGER, position, builder.toString());
         }
 
         while (Character.isDigit(ch)) {
