@@ -25,7 +25,7 @@ public class Token {
         // End of input, e.g. file
         EOF("end of input"),
         // Symbols
-        COLON(":"), NEWLINE("new line"),
+        COLON(":"), OP("("), CP(")"), DOT("."), NEWLINE("new line"),
         // Identifier
         IDENTIFIER,
         // Literals
