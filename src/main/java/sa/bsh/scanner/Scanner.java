@@ -85,10 +85,9 @@ public class Scanner {
 
 
     // Scan numbers.
-    private Token scanNumber() {
+    private Token scanNumber() throws IOException {
         /*
-         * Digit     : '0' ... '9'
-         * Digits   : Digit+
+         * Digits   : ('0' ... '9')+
          * Integer  : Digits
          * IntHex   : '0' ('x' | 'X') (Digits | 'a' ... 'f' | 'A' ... 'F')+
          * IntBin   : '0' ('b' | 'B') ('0' | '1')+
@@ -97,7 +96,85 @@ public class Scanner {
          * Exponent : ('e' | 'E') ('+' | '-')? Digit+
          * Double   : Digits Exponent | Digits '.' Digits* Exponent
          */
-        return null;
+        // Construct number attribute.
+        StringBuilder builder = new StringBuilder();
+        builder.append((char) ch);
+        int prev = ch;
+        next();
+
+
+        if (prev == '0') {
+            // Hexadecimal
+            if (ch == 'x' || ch == 'X') {
+                builder.append((char) ch);
+                next();
+
+                // Must have at least one digit.
+                if (!isHexDigit(ch))
+                    return new Token(Token.Type.ILLEGAL, position, "invalid number format");
+
+                do {
+                    builder.append((char) ch);
+                    next();
+                } while (isHexDigit(ch));
+            }
+            // Binary
+            else if (ch == 'b' || ch == 'B') {
+                builder.append((char) ch);
+                next();
+
+                // Must have at least one digit.
+                if (ch != '0' && ch != '1')
+                    return new Token(Token.Type.ILLEGAL, position, "invalid number format");
+
+                do {
+                    builder.append((char) ch);
+                    next();
+                } while (ch == '0' || ch == '1');
+            }
+
+            // Decimal
+            else {
+                while (Character.isDigit(ch)) {
+                    builder.append((char) ch);
+                    next();
+                }
+            }
+
+            if (ch == 'l' || ch == 'L') {
+                builder.append((char) ch);
+                next();
+                return new Token(Token.Type.LONG, position, builder.toString());
+            }
+
+            else if (ch == '.') {
+                assert false;
+            }
+
+            return new Token(Token.Type.INTEGER, position, builder.toString());
+        }
+
+        while (Character.isDigit(ch)) {
+            builder.append((char) ch);
+            next();
+        }
+
+        if (ch == 'l' || ch == 'L') {
+            builder.append((char) ch);
+            next();
+            return new Token(Token.Type.LONG, position, builder.toString());
+        }
+
+        else if (ch == '.') {
+            assert false;
+        }
+
+        return new Token(Token.Type.INTEGER, position, builder.toString());
+    }
+
+    // Check if the given character is hexadecimal digit.
+    private boolean isHexDigit(int ch) {
+        return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F';
     }
 
     // Scan newline.
