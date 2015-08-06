@@ -16,6 +16,7 @@ public class Scanner {
     private int lineNumber;
     private int columnNumber;
     private boolean seenEOF;
+    private Position position;
 
     /**
      * Create a new scanner from a given reader object.
@@ -53,44 +54,26 @@ public class Scanner {
             }
 
             // Remember the current position.
-            Position position = markPosition();
+            position = markPosition();
 
             // Begin with identifiers (and reserved words) as they are the most used type of tokens.
             if (Character.isJavaIdentifierStart(ch)) {
-                // Construct the identifier attribute.
-                StringBuilder builder = new StringBuilder();
-                do {
-                    builder.append((char) ch);
-                    next();
-                } while (Character.isJavaIdentifierPart((char) ch));
-
-                // Check first for reserved words
-                int i = Arrays.binarySearch(reserved, builder.toString());
-                if (i >= 0) {
-                    Token.Type type = Token.Type.valueOf(reserved[i].toUpperCase());
-                    return new Token(type, position);
-                }
-
-                // It was an identifier.
-                return new Token(Token.Type.IDENTIFIER, position, builder.toString());
+                return scanIdentifierOrReserved();
             }
 
             // Handle newline, in the forms \n and \r\n.
             else if (ch == '\n' || ch == '\r') {
-                int prev = ch;
-                next();
-                if (prev == '\r' && ch == '\n') {
-                    next();
-                }
-                // Increment the line number and reset the column.
-                lineNumber++;
-                columnNumber = 1;
-                return new Token(Token.Type.NEWLINE, position);
+                return scanNewline();
             }
 
             // Skip whitespaces (\n, \r should already been handled).
             else if (Character.isWhitespace(ch)) {
                 next();
+            }
+
+            // Check for digits
+            else if (Character.isDigit(ch)) {
+                return scanNumber();
             }
 
             else {
@@ -100,6 +83,55 @@ public class Scanner {
         } while (true);
     }
 
+
+    // Scan numbers.
+    private Token scanNumber() {
+        /*
+         * Digit     : '0' ... '9'
+         * Digits   : Digit+
+         * Integer  : Digits
+         * IntHex   : '0' ('x' | 'X') (Digits | 'a' ... 'f' | 'A' ... 'F')+
+         * IntBin   : '0' ('b' | 'B') ('0' | '1')+
+         * Integer  : Digits | IntHex | IntBin
+         * Long     : Integer ('l' | 'L')
+         * Exponent : ('e' | 'E') ('+' | '-')? Digit+
+         * Double   : Digits Exponent | Digits '.' Digits* Exponent
+         */
+        return null;
+    }
+
+    // Scan newline.
+    private Token scanNewline() throws IOException {
+        int prev = ch;
+        next();
+        if (prev == '\r' && ch == '\n') {
+            next();
+        }
+        // Increment the line number and reset the column.
+        lineNumber++;
+        columnNumber = 1;
+        return new Token(Token.Type.NEWLINE, position);
+    }
+
+    // Scan identifiers and reserved words.
+    private Token scanIdentifierOrReserved() throws IOException {
+        // Construct the identifier attribute.
+        StringBuilder builder = new StringBuilder();
+        do {
+            builder.append((char) ch);
+            next();
+        } while (Character.isJavaIdentifierPart((char) ch));
+
+        // Check first for reserved words
+        int i = Arrays.binarySearch(reserved, builder.toString());
+        if (i >= 0) {
+            Token.Type type = Token.Type.valueOf(reserved[i].toUpperCase());
+            return new Token(type, position);
+        }
+
+        // It was an identifier.
+        return new Token(Token.Type.IDENTIFIER, position, builder.toString());
+    }
 
     // Put the next character in the input in ch
     private void next() throws IOException {

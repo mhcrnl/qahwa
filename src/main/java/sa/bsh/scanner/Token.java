@@ -29,7 +29,7 @@ public class Token {
         // Identifier
         IDENTIFIER,
         // Literals
-        STRING, CHAR, INTEGER, FLOAT, DOUBLE,
+        STRING, CHAR, LONG, INTEGER, FLOAT, DOUBLE,
         // Operators
         ADD("+"), SUB("-"), MUL("*"), DIV("/"), IADD("+="), ISUB("-="), IMUL("*="), IDIV("/="), ASS("="), EQL("=="),
         NEQ("!="), LT("<"), LTE("<="), GT(">"), GTE(">="), BNOT("~"), BAND("&"), BOR("|"), LAND("and"), LOR("or"),
