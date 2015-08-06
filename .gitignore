@@ -1,0 +1,10 @@
+# Ignore IDEA related stuff
+.idea/
+out/
+*.iml
+
+# Ignore maven
+target/
+
+# Ignore test-doc folder
+test-doc/

@@ -1,0 +1,33 @@
+
+start
+  : statements-list EOF
+
+statements-list
+  : statements*
+
+statements
+  : variable-declaration
+  | if-statement
+  | while-statement
+  | expression-statement
+
+type-information
+  : IDENTIFIER
+
+variable-declaration
+  : 'var' IDENTIFIER ':' type-information '=' expression
+
+if-statement
+  : 'if' expression ':' statement-list if-statement-tail 'end'
+
+if-statement-tail
+  : ('elseif' expression ':' statements-list)* ['else' statements-list]
+
+while-statement
+  : 'while' expression ':' statements-list 'end'
+
+expression-statement
+  : expression
+
+expression
+  : TODO Expression grammar
