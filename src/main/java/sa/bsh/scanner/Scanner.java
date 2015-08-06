@@ -94,7 +94,7 @@ public class Scanner {
             }
 
             else {
-                // Illegal token has been found.
+                // Illegal character is found.
                 return new Token(Token.Type.ILLEGAL, position, Character.toString((char) ch));
             }
         } while (true);
